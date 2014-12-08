@@ -5,9 +5,9 @@
 /////////////////////////////////////////////// KLASA KOLO ///////////////////////
 
 Kolo::Kolo(double wspX, double wspY, double promien){
-	this->promien = promien;
-	this->x = wspX;
-	this->y = wspY;
+	this->vektorPunktow.push_back(wspX);
+	this->vektorPunktow.push_back(wspY);
+	this->vektorPunktow.push_back(promien);
 }
 
 Kolo::~Kolo(){
@@ -15,8 +15,8 @@ Kolo::~Kolo(){
 }
 
 bool Kolo::czyKoliduje(Kolo &drugieKolo){
-	double odleglosc = obliczOdleglosc(this->x, this->y, drugieKolo.x, drugieKolo.y);
-	double suma = this->promien + drugieKolo.promien;
+	double odleglosc = obliczOdleglosc(this->vektorPunktow[0], this->vektorPunktow[1], drugieKolo.vektorPunktow[0], drugieKolo.vektorPunktow[1]);
+	double suma = this->vektorPunktow[2] + drugieKolo.vektorPunktow[2];
 	if (odleglosc > suma){
 		return false;
 	}
@@ -26,81 +26,180 @@ bool Kolo::czyKoliduje(Kolo &drugieKolo){
 }
 
 void Kolo::PrintMe(){
-	cout << "Kolo: " << "Sr(" << x << "," << y << "), Promien: " << promien << endl;
+	cout << "Kolo: " << "Sr(" << this->vektorPunktow[0] << "," << this->vektorPunktow[1] << "), Promien: " << this->vektorPunktow[2] << endl;
+}
+
+double Kolo::getWsp(int i){
+	return this->vektorPunktow[i];
 }
 
 void Kolo::przesun(double wektorX, double wektorY){
-	this->x = this->x + wektorX;
-	this->y = this->y + wektorY;
+	this->vektorPunktow[0] = this->vektorPunktow[0] + wektorX;
+	this->vektorPunktow[1] = this->vektorPunktow[1] + wektorY;
 }
-// x'=xcos& - ysin&; y'=xsin& + ycos& 
+
 void Kolo::obroc(double stopnie){
 	double rad = (stopnie*3.14159265 / 180);
-	double pomocniczyX = this->x;
-	double pomocniczyY = this->y;
+	double pomocniczyX = this->vektorPunktow[0];
+	double pomocniczyY = this->vektorPunktow[1];
 
-	this->x = pomocniczyX*cos(rad) - pomocniczyY*sin(rad);
-	this->y = pomocniczyX*sin(rad) + pomocniczyY*cos(rad);
+	this->vektorPunktow[0] = pomocniczyX*cos(rad) - pomocniczyY*sin(rad);
+	this->vektorPunktow[1] = pomocniczyX*sin(rad) + pomocniczyY*cos(rad);
 }
 
 bool Kolo::czyKoliduje(Trojkat &trojkat){
+	if ((pow(trojkat.getWsp(0) - this->vektorPunktow[0], 2) + pow(trojkat.getWsp(1) - this->vektorPunktow[1], 2) <= this->vektorPunktow[2]) ||
+		(pow(trojkat.getWsp(2) - this->vektorPunktow[0], 2) + pow(trojkat.getWsp(3) - this->vektorPunktow[1], 2) <= this->vektorPunktow[2]) ||
+		(pow(trojkat.getWsp(4) - this->vektorPunktow[0], 2) + pow(trojkat.getWsp(5) - this->vektorPunktow[1], 2) <= this->vektorPunktow[2])) {
+			return true;
+	} // Sprawdzenie kazdego wierzcholka. czy nie zawiera sie w kole?
 	double wiekszy = 0;
 	double mniejszy = 0;
-	if (trojkat.x2 - trojkat.x1 == 0){
-		wiekszy = fmax(trojkat.y1, trojkat.y2);
-		mniejszy = fmin(trojkat.y1, trojkat.y2);
-		if (czyKolidujePIONOWA(mniejszy, wiekszy, trojkat.x1, this->x, this->y, this->promien)){
+	if (trojkat.getWsp(2) - trojkat.getWsp(0) == 0){
+		wiekszy = fmax(trojkat.getWsp(1), trojkat.getWsp(3));
+		mniejszy = fmin(trojkat.getWsp(1), trojkat.getWsp(3));
+		if (czyKolidujePIONOWA(mniejszy, wiekszy, trojkat.getWsp(0), this->vektorPunktow[0], this->vektorPunktow[1], this->vektorPunktow[2])){
 			return true;
 		}
 	}
 	else{
-		double wspA1 = obliczWspA(trojkat.x1, trojkat.y1, trojkat.x2, trojkat.y2);
-		double wspB1 = trojkat.y1 - wspA1*trojkat.x1;
-		wiekszy = fmax(trojkat.x1, trojkat.x2);
-		mniejszy = fmin(trojkat.x1, trojkat.x2);
-		cout << "Wspolczynnik dla x1,y1,x2,y2: " << trojkat.x1 << ", " << trojkat.y1 << ", " << trojkat.x2 << ", " << trojkat.y2 << endl;
+		double wspA1 = obliczWspA(trojkat.getWsp(0), trojkat.getWsp(1), trojkat.getWsp(2), trojkat.getWsp(3));
+		double wspB1 = trojkat.getWsp(1) - wspA1*trojkat.getWsp(0);
+		wiekszy = fmax(trojkat.getWsp(0), trojkat.getWsp(2));
+		mniejszy = fmin(trojkat.getWsp(0), trojkat.getWsp(2));
+		cout << "Wspolczynnik dla x1,y1,x2,y2: " << trojkat.getWsp(0) << ", " << trojkat.getWsp(1) << ", " << trojkat.getWsp(2) << ", " << trojkat.getWsp(3) << endl;
 		cout << "Wspolczynnik A: " << wspA1 << endl;
 		cout << "Wspolczynnik B: " << wspB1 << endl;
-		if (czyKolidujeZ(mniejszy, wiekszy, wspA1, wspB1, this->x, this->y, this->promien)){
+		if (czyKolidujeZ(mniejszy, wiekszy, wspA1, wspB1, this->vektorPunktow[0], this->vektorPunktow[1], this->vektorPunktow[2])){
 			return true;
 		}
 	}
-	if (trojkat.x3 - trojkat.x1 == 0){
-		wiekszy = fmax(trojkat.y1, trojkat.y3);
-		mniejszy = fmin(trojkat.y1, trojkat.y3);
-		if (czyKolidujePIONOWA(mniejszy, wiekszy, trojkat.x1, this->x, this->y, this->promien)){
+	if (trojkat.getWsp(4) - trojkat.getWsp(0) == 0){
+		wiekszy = fmax(trojkat.getWsp(1), trojkat.getWsp(5));
+		mniejszy = fmin(trojkat.getWsp(1), trojkat.getWsp(5));
+		if (czyKolidujePIONOWA(mniejszy, wiekszy, trojkat.getWsp(0), this->vektorPunktow[0], this->vektorPunktow[1], this->vektorPunktow[2])){
 			return true;
 		}
 	}
 	else{
-		double wspA2 = obliczWspA(trojkat.x1, trojkat.y1, trojkat.x3, trojkat.y3);
-		double wspB2 = trojkat.y1 - wspA2*trojkat.x1;
-		wiekszy = fmax(trojkat.x1, trojkat.x3);
-		mniejszy = fmin(trojkat.x1, trojkat.x3);
-		cout << "Wspolczynnik dla x1,y1,x3,y3: " << trojkat.x1 << ", " << trojkat.y1 << ", " << trojkat.x3 << ", " << trojkat.y3 << endl;
+		double wspA2 = obliczWspA(trojkat.getWsp(0), trojkat.getWsp(1), trojkat.getWsp(4), trojkat.getWsp(5));
+		double wspB2 = trojkat.getWsp(1) - wspA2*trojkat.getWsp(0);
+		wiekszy = fmax(trojkat.getWsp(0), trojkat.getWsp(4));
+		mniejszy = fmin(trojkat.getWsp(0), trojkat.getWsp(4));
+		cout << "Wspolczynnik dla x1,y1,x3,y3: " << trojkat.getWsp(0) << ", " << trojkat.getWsp(1) << ", " << trojkat.getWsp(4) << ", " << trojkat.getWsp(5) << endl;
 		cout << "Wspolczynnik A: " << wspA2 << endl;
 		cout << "Wspolczynnik B: " << wspB2 << endl;
-		if (czyKolidujeZ(mniejszy, wiekszy, wspA2, wspB2, this->x, this->y, this->promien)){
+		if (czyKolidujeZ(mniejszy, wiekszy, wspA2, wspB2, this->vektorPunktow[0], this->vektorPunktow[1], this->vektorPunktow[2])){
 			return true;
 		}
 	}
 
-	if (trojkat.x2 - trojkat.x3 == 0){
-		wiekszy = fmax(trojkat.y2, trojkat.y3);
-		mniejszy = fmin(trojkat.y2, trojkat.y3);
-		if (czyKolidujePIONOWA(mniejszy, wiekszy, trojkat.x2, this->x, this->y, this->promien)){
+	if (trojkat.getWsp(2) - trojkat.getWsp(4) == 0){
+		wiekszy = fmax(trojkat.getWsp(3), trojkat.getWsp(5));
+		mniejszy = fmin(trojkat.getWsp(3), trojkat.getWsp(5));
+		if (czyKolidujePIONOWA(mniejszy, wiekszy, trojkat.getWsp(2), this->vektorPunktow[0], this->vektorPunktow[1], this->vektorPunktow[2])){
 			return true;
 		}
 	}
 	else{
-		double wspA3 = obliczWspA(trojkat.x2, trojkat.y2, trojkat.x3, trojkat.y3);
-		double wspB3 = trojkat.y2 - wspA3*trojkat.x2;
-		wiekszy = fmax(trojkat.x2, trojkat.x3);
-		mniejszy = fmin(trojkat.x2, trojkat.x3);
-		cout << "Wspolczynnik dla x2,y2,x3,y3: " << trojkat.x2 << ", " << trojkat.y2 << ", " << trojkat.x3 << ", " << trojkat.y3 << endl;
+		double wspA3 = obliczWspA(trojkat.getWsp(2), trojkat.getWsp(3), trojkat.getWsp(4), trojkat.getWsp(5));
+		double wspB3 = trojkat.getWsp(3) - wspA3*trojkat.getWsp(2);
+		wiekszy = fmax(trojkat.getWsp(2), trojkat.getWsp(4));
+		mniejszy = fmin(trojkat.getWsp(2), trojkat.getWsp(4));
+		cout << "Wspolczynnik dla x2,y2,x3,y3: " << trojkat.getWsp(2) << ", " << trojkat.getWsp(3) << ", " << trojkat.getWsp(4) << ", " << trojkat.getWsp(5) << endl;
 		cout << "Wspolczynnik A: " << wspA3 << endl;
 		cout << "Wspolczynnik B: " << wspB3 << endl;
-		if (czyKolidujeZ(mniejszy, wiekszy, wspA3, wspB3, this->x, this->y, this->promien)){
+		if (czyKolidujeZ(mniejszy, wiekszy, wspA3, wspB3, this->vektorPunktow[0], this->vektorPunktow[1], this->vektorPunktow[2])){
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Kolo::czyKoliduje(Kwadrat &kwadrat){
+	if ((pow(kwadrat.getWsp(0) - this->vektorPunktow[0], 2) + pow(kwadrat.getWsp(1) - this->vektorPunktow[1], 2) <= this->vektorPunktow[2]) ||
+		(pow(kwadrat.getWsp(2) - this->vektorPunktow[0], 2) + pow(kwadrat.getWsp(3) - this->vektorPunktow[1], 2) <= this->vektorPunktow[2]) ||
+		(pow(kwadrat.getWsp(4) - this->vektorPunktow[0], 2) + pow(kwadrat.getWsp(5) - this->vektorPunktow[1], 2) <= this->vektorPunktow[2]) ||
+		(pow(kwadrat.getWsp(6) - this->vektorPunktow[0], 2) + pow(kwadrat.getWsp(7) - this->vektorPunktow[1], 2) <= this->vektorPunktow[2])){
+		return true;
+	} // Sprawdzenie kazdego wierzcholka. czy nie zawiera sie w kole?
+	double wiekszy = 0;
+	double mniejszy = 0;
+	if (kwadrat.getWsp(2) - kwadrat.getWsp(0) == 0){
+		wiekszy = fmax(kwadrat.getWsp(1), kwadrat.getWsp(3));
+		mniejszy = fmin(kwadrat.getWsp(1), kwadrat.getWsp(3));
+		if (czyKolidujePIONOWA(mniejszy, wiekszy, kwadrat.getWsp(0), this->vektorPunktow[0], this->vektorPunktow[1], this->vektorPunktow[2])){
+			return true;
+		}
+	}
+	else{
+		double wspA1 = obliczWspA(kwadrat.getWsp(0), kwadrat.getWsp(1), kwadrat.getWsp(2), kwadrat.getWsp(3));
+		double wspB1 = kwadrat.getWsp(1) - wspA1*kwadrat.getWsp(0);
+		wiekszy = fmax(kwadrat.getWsp(0), kwadrat.getWsp(2));
+		mniejszy = fmin(kwadrat.getWsp(0), kwadrat.getWsp(2));
+		cout << "Wspolczynnik dla x1,y1,x2,y2: " << kwadrat.getWsp(0) << ", " << kwadrat.getWsp(1) << ", " << kwadrat.getWsp(2) << ", " << kwadrat.getWsp(3) << endl;
+		cout << "Wspolczynnik A: " << wspA1 << endl;
+		cout << "Wspolczynnik B: " << wspB1 << endl;
+		if (czyKolidujeZ(mniejszy, wiekszy, wspA1, wspB1, this->vektorPunktow[0], this->vektorPunktow[1], this->vektorPunktow[2])){
+			return true;
+		}
+	}
+	if (kwadrat.getWsp(6) - kwadrat.getWsp(0) == 0){
+		wiekszy = fmax(kwadrat.getWsp(1), kwadrat.getWsp(7));
+		mniejszy = fmin(kwadrat.getWsp(1), kwadrat.getWsp(7));
+		if (czyKolidujePIONOWA(mniejszy, wiekszy, kwadrat.getWsp(0), this->vektorPunktow[0], this->vektorPunktow[1], this->vektorPunktow[2])){
+			return true;
+		}
+	}
+	else{
+		double wspA2 = obliczWspA(kwadrat.getWsp(0), kwadrat.getWsp(1), kwadrat.getWsp(6), kwadrat.getWsp(7));
+		double wspB2 = kwadrat.getWsp(1) - wspA2*kwadrat.getWsp(0);
+		wiekszy = fmax(kwadrat.getWsp(0), kwadrat.getWsp(6));
+		mniejszy = fmin(kwadrat.getWsp(0), kwadrat.getWsp(6));
+		cout << "Wspolczynnik dla x1,y1,x4,y4: " << kwadrat.getWsp(0) << ", " << kwadrat.getWsp(1) << ", " << kwadrat.getWsp(6) << ", " << kwadrat.getWsp(7) << endl;
+		cout << "Wspolczynnik A: " << wspA2 << endl;
+		cout << "Wspolczynnik B: " << wspB2 << endl;
+		if (czyKolidujeZ(mniejszy, wiekszy, wspA2, wspB2, this->vektorPunktow[0], this->vektorPunktow[1], this->vektorPunktow[2])){
+			return true;
+		}
+	}
+
+	if (kwadrat.getWsp(2) - kwadrat.getWsp(4) == 0){
+		wiekszy = fmax(kwadrat.getWsp(3), kwadrat.getWsp(5));
+		mniejszy = fmin(kwadrat.getWsp(3), kwadrat.getWsp(5));
+		if (czyKolidujePIONOWA(mniejszy, wiekszy, kwadrat.getWsp(2), this->vektorPunktow[0], this->vektorPunktow[1], this->vektorPunktow[2])){
+			return true;
+		}
+	}
+	else{
+		double wspA3 = obliczWspA(kwadrat.getWsp(2), kwadrat.getWsp(3), kwadrat.getWsp(4), kwadrat.getWsp(5));
+		double wspB3 = kwadrat.getWsp(3) - wspA3*kwadrat.getWsp(2);
+		wiekszy = fmax(kwadrat.getWsp(2), kwadrat.getWsp(4));
+		mniejszy = fmin(kwadrat.getWsp(2), kwadrat.getWsp(4));
+		cout << "Wspolczynnik dla x2,y2,x3,y3: " << kwadrat.getWsp(2) << ", " << kwadrat.getWsp(3) << ", " << kwadrat.getWsp(4) << ", " << kwadrat.getWsp(5) << endl;
+		cout << "Wspolczynnik A: " << wspA3 << endl;
+		cout << "Wspolczynnik B: " << wspB3 << endl;
+		if (czyKolidujeZ(mniejszy, wiekszy, wspA3, wspB3, this->vektorPunktow[0], this->vektorPunktow[1], this->vektorPunktow[2])){
+			return true;
+		}
+	}
+
+	if (kwadrat.getWsp(4) - kwadrat.getWsp(6) == 0){
+		wiekszy = fmax(kwadrat.getWsp(5), kwadrat.getWsp(7));
+		mniejszy = fmin(kwadrat.getWsp(5), kwadrat.getWsp(7));
+		if (czyKolidujePIONOWA(mniejszy, wiekszy, kwadrat.getWsp(4), this->vektorPunktow[0], this->vektorPunktow[1], this->vektorPunktow[2])){
+			return true;
+		}
+	}
+	else{
+		double wspA4 = obliczWspA(kwadrat.getWsp(4), kwadrat.getWsp(5), kwadrat.getWsp(6), kwadrat.getWsp(7));
+		double wspB4 = kwadrat.getWsp(5) - wspA4*kwadrat.getWsp(4);
+		wiekszy = fmax(kwadrat.getWsp(4), kwadrat.getWsp(6));
+		mniejszy = fmin(kwadrat.getWsp(4), kwadrat.getWsp(6));
+		cout << "Wspolczynnik dla x1,y1,x4,y4: " << kwadrat.getWsp(4) << ", " << kwadrat.getWsp(5) << ", " << kwadrat.getWsp(6) << ", " << kwadrat.getWsp(7) << endl;
+		cout << "Wspolczynnik A: " << wspA4 << endl;
+		cout << "Wspolczynnik B: " << wspB4 << endl;
+		if (czyKolidujeZ(mniejszy, wiekszy, wspA4, wspB4, this->vektorPunktow[0], this->vektorPunktow[1], this->vektorPunktow[2])){
 			return true;
 		}
 	}
@@ -110,109 +209,117 @@ bool Kolo::czyKoliduje(Trojkat &trojkat){
 /////////////////////////////////////////////// KLASA TROJKAT ///////////////////////
 
 Trojkat::Trojkat(double x1, double y1, double x2, double y2, double x3, double y3){
-	this->x1 = x1;
-	this->x2 = x2;
-	this->x3 = x3;
-	this->y1 = y1;
-	this->y2 = y2;
-	this->y3 = y3;
+	this->vektorPunktow.push_back(x1);
+	this->vektorPunktow.push_back(y1);
+	this->vektorPunktow.push_back(x2);
+	this->vektorPunktow.push_back(y2);
+	this->vektorPunktow.push_back(x3);
+	this->vektorPunktow.push_back(y3);
 }
 
 Trojkat::~Trojkat(){
 
 }
 
+double Trojkat::getWsp(int i){
+	return this->vektorPunktow[i];
+}
+
 void Trojkat::przesun(double wektorX, double wektorY){
-	this->x1 = this->x1 + wektorX;
-	this->y1 = this->y1 + wektorY;
-	this->x2 = this->x2 + wektorX;
-	this->y2 = this->y2 + wektorY;
-	this->x3 = this->x3 + wektorX;
-	this->y3 = this->y3 + wektorY;
+	this->vektorPunktow[0] = this->vektorPunktow[0] + wektorX;
+	this->vektorPunktow[1] = this->vektorPunktow[1] + wektorY;
+	this->vektorPunktow[2] = this->vektorPunktow[2] + wektorX;
+	this->vektorPunktow[3] = this->vektorPunktow[3] + wektorY;
+	this->vektorPunktow[4] = this->vektorPunktow[4] + wektorX;
+	this->vektorPunktow[5] = this->vektorPunktow[5] + wektorY;
 }
 
 void Trojkat::obroc(double stopnie){
 	double rad = (stopnie*3.14159265 / 180);
-	double pomocniczyX = this->x1;
-	double pomocniczyY = this->y1;
+	double pomocniczyX = this->vektorPunktow[0];
+	double pomocniczyY = this->vektorPunktow[1];
 
-	this->x1 = pomocniczyX*cos(rad) - pomocniczyY*sin(rad);
-	this->y1 = pomocniczyX*sin(rad) + pomocniczyY*cos(rad);
+	this->vektorPunktow[0] = pomocniczyX*cos(rad) - pomocniczyY*sin(rad);
+	this->vektorPunktow[1] = pomocniczyX*sin(rad) + pomocniczyY*cos(rad);
 
-	pomocniczyX = this->x2;
-	pomocniczyY = this->y2;
+	pomocniczyX = this->vektorPunktow[2];
+	pomocniczyY = this->vektorPunktow[3];
 
-	this->x2 = pomocniczyX*cos(rad) - pomocniczyY*sin(rad);
-	this->y2 = pomocniczyX*sin(rad) + pomocniczyY*cos(rad);
+	this->vektorPunktow[2] = pomocniczyX*cos(rad) - pomocniczyY*sin(rad);
+	this->vektorPunktow[3] = pomocniczyX*sin(rad) + pomocniczyY*cos(rad);
 
-	pomocniczyX = this->x3;
-	pomocniczyY = this->y3;
+	pomocniczyX = this->vektorPunktow[4];
+	pomocniczyY = this->vektorPunktow[5];
 
-	this->x3 = pomocniczyX*cos(rad) - pomocniczyY*sin(rad);
-	this->y3 = pomocniczyX*sin(rad) + pomocniczyY*cos(rad);
+	this->vektorPunktow[4] = pomocniczyX*cos(rad) - pomocniczyY*sin(rad);
+	this->vektorPunktow[5] = pomocniczyX*sin(rad) + pomocniczyY*cos(rad);
 }
 
 void Trojkat::PrintMe(){
-	cout << "Trojkat: " << "A(" << x1 << "," << y1 << "); B(" << x2 << "," << y2 << "); C(" << x3 << "," << y3 << ")" << endl;
+	cout << "Trojkat: " << "A(" << this->vektorPunktow[0] << "," << this->vektorPunktow[1] << "); B(" << this->vektorPunktow[2] << "," << this->vektorPunktow[3] << "); C(" << this->vektorPunktow[4] << "," << this->vektorPunktow[5] << ")" << endl;
 }
 
 /////////////////////////////////////////////// KLASA KWADRAT ///////////////////////
 
 Kwadrat::Kwadrat(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4){
-	this->x1 = x1;
-	this->y1 = y1;
-	this->x2 = x2;
-	this->y2 = y2;
-	this->x3 = x3;
-	this->y3 = y3;
-	this->x4 = x4;
-	this->y4 = y4;
+	this->vektorPunktow.push_back(x1);
+	this->vektorPunktow.push_back(y1);
+	this->vektorPunktow.push_back(x2);
+	this->vektorPunktow.push_back(y2);
+	this->vektorPunktow.push_back(x3);
+	this->vektorPunktow.push_back(y3);
+	this->vektorPunktow.push_back(x4);
+	this->vektorPunktow.push_back(y4);
 }
 
 Kwadrat::~Kwadrat(){
 
 }
 
+double Kwadrat::getWsp(int i){
+	return this->vektorPunktow[i];
+}
+
 void Kwadrat::przesun(double wektorX, double wektorY){
-	this->x1 = this->x1 + wektorX;
-	this->y1 = this->y1 + wektorY;
-	this->x2 = this->x2 + wektorX;
-	this->y2 = this->y2 + wektorY;
-	this->x3 = this->x3 + wektorX;
-	this->y3 = this->y3 + wektorY;
-	this->x4 = this->x4 + wektorX;
-	this->y4 = this->y4 + wektorY;
+	this->vektorPunktow[0] = this->vektorPunktow[0] + wektorX;
+	this->vektorPunktow[1] = this->vektorPunktow[1] + wektorY;
+	this->vektorPunktow[2] = this->vektorPunktow[2] + wektorX;
+	this->vektorPunktow[3] = this->vektorPunktow[3] + wektorY;
+	this->vektorPunktow[4] = this->vektorPunktow[4] + wektorX;
+	this->vektorPunktow[5] = this->vektorPunktow[5] + wektorY;
+	this->vektorPunktow[6] = this->vektorPunktow[6] + wektorX;
+	this->vektorPunktow[7] = this->vektorPunktow[7] + wektorY;
 }
 
 void Kwadrat::obroc(double stopnie){
 	double rad = (stopnie*3.14159265 / 180);
-	double pomocniczyX = this->x1;
-	double pomocniczyY = this->y1;
+	double pomocniczyX = this->vektorPunktow[0];
+	double pomocniczyY = this->vektorPunktow[1];
 
-	this->x1 = pomocniczyX*cos(rad) - pomocniczyY*sin(rad);
-	this->y1 = pomocniczyX*sin(rad) + pomocniczyY*cos(rad);
+	this->vektorPunktow[0] = pomocniczyX*cos(rad) - pomocniczyY*sin(rad);
+	this->vektorPunktow[1] = pomocniczyX*sin(rad) + pomocniczyY*cos(rad);
 
-	pomocniczyX = this->x2;
-	pomocniczyY = this->y2;
+	pomocniczyX = this->vektorPunktow[2];
+	pomocniczyY = this->vektorPunktow[3];
 
-	this->x2 = pomocniczyX*cos(rad) - pomocniczyY*sin(rad);
-	this->y2 = pomocniczyX*sin(rad) + pomocniczyY*cos(rad);
+	this->vektorPunktow[2] = pomocniczyX*cos(rad) - pomocniczyY*sin(rad);
+	this->vektorPunktow[3] = pomocniczyX*sin(rad) + pomocniczyY*cos(rad);
 
-	pomocniczyX = this->x3;
-	pomocniczyY = this->y3;
+	pomocniczyX = this->vektorPunktow[4];
+	pomocniczyY = this->vektorPunktow[5];
 
-	this->x3 = pomocniczyX*cos(rad) - pomocniczyY*sin(rad);
-	this->y3 = pomocniczyX*sin(rad) + pomocniczyY*cos(rad);
+	this->vektorPunktow[4] = pomocniczyX*cos(rad) - pomocniczyY*sin(rad);
+	this->vektorPunktow[5] = pomocniczyX*sin(rad) + pomocniczyY*cos(rad);
 
-	pomocniczyX = this->x4;
-	pomocniczyY = this->y4;
+	pomocniczyX = this->vektorPunktow[6];
+	pomocniczyY = this->vektorPunktow[7];
 
-	this->x4 = pomocniczyX*cos(rad) - pomocniczyY*sin(rad);
-	this->y4 = pomocniczyX*sin(rad) + pomocniczyY*cos(rad);
+	this->vektorPunktow[6] = pomocniczyX*cos(rad) - pomocniczyY*sin(rad);
+	this->vektorPunktow[7] = pomocniczyX*sin(rad) + pomocniczyY*cos(rad);
 }
 
 void Kwadrat::PrintMe(){
-	cout << "Kwadrat: " << "A(" << x1 << "," << y1 << "); B(" << x2 << "," << y2 << "); C(" << x3 << "," << y3 << "); D(" << x4 << "," << y4 << ")" << endl;
+	cout << "Kwadrat: " << "A(" << this->vektorPunktow[0] << "," << this->vektorPunktow[1] << "); B(" << this->vektorPunktow[2] << "," << this->vektorPunktow[3] << "); C(" << this->vektorPunktow[4] << "," << this->vektorPunktow[5] << "); D(" << this->vektorPunktow[6] << "," << this->vektorPunktow[7] << ")" << endl;
 }
 /////////////////////////////////////////////// FUNKCJE GLOBALNE ///////////////////////
 

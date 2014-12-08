@@ -1,6 +1,7 @@
 #include <math.h>
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -9,31 +10,26 @@ class Kwadrat;
 
 class Kolo{
 
+private:
+	vector<double> vektorPunktow;
 public:
-	double x;
-	double y;
-	double promien;
-
 	Kolo(double = 0, double = 0, double = 0);
 	~Kolo();
+	double getWsp(int i);
 	void PrintMe();
 	void przesun(double = 0, double = 0);
 	void obroc(double = 0);
 	bool czyKoliduje(Kolo &);
 	bool czyKoliduje(Trojkat &);
-	//bool czyKoliduje(Kwadrat &);
+	bool czyKoliduje(Kwadrat &);
 };
 
 class Trojkat{
 
+private:
+	vector<double> vektorPunktow;
 public:
-	double x1;
-	double y1;
-	double x2;
-	double y2;
-	double x3;
-	double y3;
-
+	double getWsp(int i);
 	Trojkat(double = 0, double = 0, double = 0, double = 0, double = 0, double = 0);
 	~Trojkat();
 	void PrintMe();
@@ -46,16 +42,10 @@ public:
 
 class Kwadrat{
 
+private:
+	vector<double> vektorPunktow;
 public:
-	double x1;
-	double y1;
-	double x2;
-	double y2;
-	double x3;
-	double y3;
-	double x4;
-	double y4;
-
+	double getWsp(int i);
 	Kwadrat(double = 0, double = 0, double = 0, double = 0, double = 0, double = 0, double =0, double =0);
 	~Kwadrat();
 	void PrintMe();
