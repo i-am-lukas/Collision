@@ -11,13 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Figura.h" />
     <ClInclude Include="KsztaltyPodstawowe.h" />
+    <ClInclude Include="Obiekt.h" />
     <ClInclude Include="Zderzenia.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Figura.cpp" />
     <ClCompile Include="KsztaltyPodstawowe.cpp" />
+    <ClCompile Include="Obiekt.cpp" />
     <ClCompile Include="Zderzenia.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

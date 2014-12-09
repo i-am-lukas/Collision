@@ -21,7 +21,7 @@
     <ClInclude Include="KsztaltyPodstawowe.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Figura.h">
+    <ClInclude Include="Obiekt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -32,7 +32,7 @@
     <ClCompile Include="KsztaltyPodstawowe.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Figura.cpp">
+    <ClCompile Include="Obiekt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
