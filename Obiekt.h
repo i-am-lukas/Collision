@@ -1,20 +1,25 @@
 #include "KsztaltyPodstawowe.h"
 
 class Obiekt{
-
 private:
 	vector<Kolo> wektorKol;
-	vector<Kwadrat> wektorKwadratow;
+	vector<Prostokat> wektorProstokatow;
 	vector<Trojkat> wektorTrojkatow;
 	vector<string> wektorKolizji;
-	string identyfikator;
+	int id;
+	static int hashKod;
+	string nazwa;
 public:
-	Obiekt(string);
+	Obiekt(string="obiekt");
 	~Obiekt();
-	string getIdentyfikator();
+	int getID();
+	string getNazwa();
 	void dodajKsztaltPodstawowy(Kolo &);
 	void dodajKsztaltPodstawowy(Trojkat &);
-	void dodajKsztaltPodstawowy(Kwadrat &);
+	void dodajKsztaltPodstawowy(Prostokat &);
 	void pokazKolizje();
 	bool czyKoliduje(Obiekt &);
+	void obroc(double);
+	void przesun(double, double);
+	void pokazWspPkt();
 };

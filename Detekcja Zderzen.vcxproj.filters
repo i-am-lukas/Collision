@@ -15,24 +15,42 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Zderzenia.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="KsztaltyPodstawowe.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Obiekt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Scena.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Detekcja Zderzen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ParyKolidujace.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Zderzenia.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="KsztaltyPodstawowe.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Obiekt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Prostokat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Trojkat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Kolo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scena.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Detekcja Zderzen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParyKolidujace.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

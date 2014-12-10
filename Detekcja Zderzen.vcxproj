@@ -11,14 +11,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Detekcja Zderzen.h" />
     <ClInclude Include="KsztaltyPodstawowe.h" />
     <ClInclude Include="Obiekt.h" />
-    <ClInclude Include="Zderzenia.h" />
+    <ClInclude Include="ParyKolidujace.h" />
+    <ClInclude Include="Scena.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="KsztaltyPodstawowe.cpp" />
+    <ClCompile Include="Detekcja Zderzen.cpp" />
+    <ClCompile Include="Kolo.cpp" />
     <ClCompile Include="Obiekt.cpp" />
-    <ClCompile Include="Zderzenia.cpp" />
+    <ClCompile Include="ParyKolidujace.cpp" />
+    <ClCompile Include="Prostokat.cpp" />
+    <ClCompile Include="Scena.cpp" />
+    <ClCompile Include="Trojkat.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{363EBC99-73A8-42AD-927D-2F4AD0560698}</ProjectGuid>

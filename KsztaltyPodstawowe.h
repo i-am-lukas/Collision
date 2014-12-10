@@ -7,7 +7,7 @@ using namespace std;
 
 
 class Trojkat;
-class Kwadrat;
+class Prostokat;
 
 class Kolo{
 
@@ -24,7 +24,7 @@ public:
 	void obroc(double = 0);
 	bool czyKoliduje(Kolo &);
 	bool czyKoliduje(Trojkat &);
-	bool czyKoliduje(Kwadrat &);
+	bool czyKoliduje(Prostokat &);
 };
 
 class Trojkat{
@@ -33,7 +33,7 @@ private:
 	vector<double> vektorPunktow;
 	string identyfikator;
 public:
-	Trojkat(double = 0, double = 0, double = 0, double = 0, double = 0, double = 0,string = "Trojkat");
+	Trojkat(double = 0, double = 0, double = 0, double = 0, double = 0, double = 0, string = "Trojkat");
 	~Trojkat();
 	double getWsp(int i);
 	string getIdentyfikator();
@@ -43,26 +43,26 @@ public:
 	void obroc(double = 0);
 	bool czyKoliduje(Kolo &);
 	bool czyKoliduje(Trojkat &);
-	bool czyKoliduje(Kwadrat &);
+	bool czyKoliduje(Prostokat &);
 };
 
-class Kwadrat{
+class Prostokat{
 
 private:
 	vector<double> vektorPunktow;
 	string identyfikator;
 public:
-	Kwadrat(double = 0, double = 0, double = 0, double = 0, double = 0, double = 0, double =0, double =0,string = "Kwadrat");
-	~Kwadrat();
+	Prostokat(double = 0, double = 0, double = 0, double = 0, double = 0, double = 0, double = 0, double = 0, string = "Prostokat");
+	~Prostokat();
 	double getWsp(int i);
 	vector<double> getVec();
 	string getIdentyfikator();
 	void PrintMe();
-	void przesun(double=0, double=0);
+	void przesun(double = 0, double = 0);
 	void obroc(double = 0);
 	bool czyKoliduje(Kolo &);
 	bool czyKoliduje(Trojkat &);
-	bool czyKoliduje(Kwadrat &);
+	bool czyKoliduje(Prostokat &);
 };
 
 double obliczOdleglosc(double, double, double, double);
